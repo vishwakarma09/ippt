@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<script src="resources/jquery.min.js"></script>
+	<script src="resources/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="resources/bootstrap.min.css">
+	<meta charset="UTF-8">
+	<title>IPPT</title>
+</head>
+<script>
+$(document).ready(function(){
+	LoadAgeSelect();
+	LoadSitupSelect();
+	LoadPushupSelect();
+	LoadRunSelectMin();
+	LoadRunSelectSec();
+});
+
+function LoadAgeSelect(){
+	$.post('Controller/controller.php', {cservice : 'LoadAgeSelect' } , function(data, status){
+		$('#divAgeSelect').html(data);
+	});
+}
+
+function LoadSitupSelect(){
+	$.post('Controller/controller.php', {cservice : 'LoadSitupSelect' } , function(data, status){
+		$('#divSitupSelect').html(data);
+	});
+}
+
+function LoadPushupSelect(){
+	$.post('Controller/controller.php', {cservice : 'LoadPushupSelect' } , function(data, status){
+		$('#divPushupSelect').html(data);
+	});
+}
+
+function LoadRunSelectMin(){
+	$.post('Controller/controller.php', {cservice : 'LoadRunSelectMin' } , function(data, status){
+		$('#divRunMinSelect').html(data);
+	});
+}
+
+function LoadRunSelectSec(){
+	$.post('Controller/controller.php', {cservice : 'LoadRunSelectSec' } , function(data, status){
+		$('#divRunSecSelect').html(data);
+	});
+}
+/*
+function CalcAgeGroup(){
+	var age = $('#selAge').val();
+	$.post('Controller/controller.php', {cservice : 'CalcAgeGroup', age : age } , function(data, status){
+		$('#AgeGroup').html(data);
+	});
+}
+
+function CalcSitupPoints(){
+	var age = $('#selAge').val();
+	var situps = $('#selSitup').val();
+	$.post('Controller/controller.php', {cservice : 'CalcSitupPoints', age : age, situps : situps } , function(data, status){
+		$('#divPointSitups').html(data);
+	});
+}
+
+function CalcPushupPoints(){
+	var age = $('#selAge').val();
+	var pushups = $('#selPush').val();
+	$.post('Controller/controller.php', {cservice : 'CalcPushupPoints', age : age, pushups : pushups } , function(data, status){
+		$('#divPointsPushups').html(data);
+	});
+}
+
+function CalcRunPoints(){
+	var age = $('#selAge').val();
+	var min = $('#selRunMin').val();
+	var sec = $('#selRunSec').val();
+	$.post('Controller/controller.php', {cservice : 'CalcRunPoints', age : age, runmin : min, runsec : sec } , function(data, status){
+		$('#divPointRun').html(data);
+	});
+}
+*/
+function Calculate(){
+	var age = $('#selAge').val();
+	var situps = $('#selSitup').val();
+	var pushups = $('#selPush').val();
+	var min = $('#selRunMin').val();
+	var sec = $('#selRunSec').val();
+	$.post('Controller/controller.php', {cservice : 'Calculate', age : age, situps : situps, pushups : pushups, runmin : min, runsec : sec } , function(data, status){
+		var result = $.parseJSON(data);
+		$('#AgeGroup').html(result.result.agegroup);
+		$('#divPointSitups').html(result.result.situppoints);
+		$('#divPointsPushups').html(result.result.pushuppoints);
+		$('#divPointRun').html(result.result.runpoints);
+		$('#divTotalPoints').html(result.result.totalpoints);
+		$('#divStatus').html(result.result.totalresult);
+	});
+	
+}
+
+</script>
+
+<body>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-xs-12" align="left"><h1>IPPT calculator</h1></div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12" align="left"><font color="grey">Calculate your IPPT score</font></div>
+		</div>
+	</div>
+	
+	<!-- div.container-fluid>div.row*2>div.col-xs-6*2  -->
+	
+	<div class="container-fluid">
+		<div class="row">
+		<div class="col-md-6 form-group"><h4>What is your age?</h4><br><font color="gray">(Age group <span id="AgeGroup"></span>)</font></div>
+			<div id="divAgeSelect" class="col-md-6 form-group">&nbsp;</div>
+		</div>
+		<div class="row">
+			<div class="col-md-3 form-group"><font color="gray">Station</font></div>
+			<div class="col-md-3 form-group"><font color="gray">You can do</font></div>
+			<div class="col-md-3 form-group"><font color="gray">Points</font></div>
+			<div class="col-md-3 form-group"><font color="gray">To next point</font></div>
+		</div>
+		<hr>
+		<div class="row">
+			<div class="col-md-3 form-group">Sit-Ups</div>
+			<div class="col-md-3 form-group" id="divSitupSelect"></div>
+			<div class="col-md-3 form-group" id="divPointSitups"></div>
+			<div class="col-md-3 form-group" id="divMileStoneSitup"></div>
+		</div>
+		<div class="row">
+			<div class="col-md-3 form-group">Push-Ups</div>
+			<div class="col-md-3 form-group" id="divPushupSelect"></div>
+			<div class="col-md-3 form-group" id="divPointsPushups"></div>
+			<div class="col-md-3 form-group" id="divMileStonePushup"></div>
+		</div>
+		<div class="row">
+			<div class="col-md-3 form-group">2.4km run</div>
+			<div class="col-md-3 form-group" id="divRun"><div id="divRunMinSelect"></div><div id="divRunSecSelect"></div></div>
+			<div class="col-md-3 form-group" id="divPointRun"></div>
+			<div class="col-md-3 form-group" id="divMileStoneRun"></div>
+		</div>
+		<hr>
+		<div class="row">
+			<div class="col-md-3 form-group">Total Points</div>
+			<div class="col-md-3 form-group" id="divTotalPoints"></div>
+			<div class="col-md-3 form-group">STATUS</div>
+			<div class="col-md-3 form-group" id="divStatus"></div>
+		</div>
+	</div>
+</body>
+</html>
